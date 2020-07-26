@@ -1,28 +1,28 @@
 /**
-*  @filename   :   SMS.cpp
-*  @brief      :   Implements for sim7600c 4g hat raspberry pi demo
-*  @author     :   Kaloha from Waveshare
-*
-*  Copyright (C) Waveshare     April 27 2018
-*  http://www.waveshare.com / http://www.waveshare.net
-*
-* Permission is hereby granted, free of charge, to any person obtaining a copy
-* of this software and associated documnetation files (the "Software"), to deal
-* in the Software without restriction, including without limitation the rights
-* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-* copies of the Software, and to permit persons to  whom the Software is
-* furished to do so, subject to the following conditions:
-*
-* The above copyright notice and this permission notice shall be included in
-* all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-* FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-* LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-* THE SOFTWARE.
+	*  @filename   :   SMS.cpp
+	*  @brief      :   Implements for sim7600c 4g hat raspberry pi demo
+	*  @author     :   Kaloha from Waveshare
+	*
+	*  Copyright (C) Waveshare     April 27 2018
+	*  http://www.waveshare.com / http://www.waveshare.net
+	*
+	* Permission is hereby granted, free of charge, to any person obtaining a copy
+	* of this software and associated documnetation files (the "Software"), to deal
+	* in the Software without restriction, including without limitation the rights
+	* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	* copies of the Software, and to permit persons to  whom the Software is
+	* furished to do so, subject to the following conditions:
+	*
+	* The above copyright notice and this permission notice shall be included in
+	* all copies or substantial portions of the Software.
+	*
+	* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	* FITNESS OR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	* LIABILITY WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	* THE SOFTWARE.
 */
 
 #include "../arduPi.h"
@@ -30,6 +30,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <algorithm>
 
 #include <unistd.h>
 using namespace std;
@@ -38,7 +39,6 @@ using namespace std;
 int POWERKEY = 6;
 
 // TODO: add more standard message options
-// TODO: setup wlan0 4g network for http connection and video/email capabilities
 
 char phone_number[] = "15031234567"; // this is for use with other functions	
 char text_message[] = "Welcome to Wildlive Remote! To receive photo, video or sensor data, text your request. For formatting requirements text 'help'";
@@ -46,9 +46,7 @@ string admin = "18027346892";
 string off = "off";
 
 void setup() {
-
 	sim7600.PowerOn(POWERKEY);
-	
 }
 
 void listen() {
@@ -58,13 +56,13 @@ void listen() {
 
 	// vars
 	char message[200];
-	bool success = false;
+	bool rec_msg = false;
 
 	// check for message
-	success = sim7600.ReceivingShortMessage(message);
+	rec_msg = sim7600.ReceivingShortMessage(message);
 
 	// if there's a message
-	if (success == true)
+	if (rec_msg == true)
 	{
 		string msg(message);
 		string ph_num;
@@ -89,6 +87,8 @@ void listen() {
 			}
 		}
 
+		transform(text.begin(), text.end(), text.begin(), ::tolower);
+
 		// If Admin sent the command off, remote shutdown
 		if (text.compare(off) == 0 && ph_num.compare(admin) == 0)
 		{
@@ -96,7 +96,12 @@ void listen() {
 			exit(0);
 		}
 
-		// TODO: pass off the message and phone number somewhere for processing and execution
+		// Write phone number and message out to a file for processing and execution
+		ofstream f;
+		f.open("sms_input.txt");
+		f << ph_num << ',' << text << endl;
+		f.close();
+
 		// TODO: listen for responses from programs for return data to provide
 
 		// convert the phone number
@@ -107,8 +112,6 @@ void listen() {
 		sim7600.SendingShortMessage(ph_num_char, text_message);
 		strcpy(ph_num_char, "0000000000");
 	}
-	
-
 }
 
 int main() {
