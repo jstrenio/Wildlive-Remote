@@ -42,6 +42,7 @@ int POWERKEY = 6;
 
 char phone_number[] = "15031234567"; // this is for use with other functions	
 char text_message[] = "Welcome to Wildlive Remote! To receive photo, video or sensor data, text your request. For formatting requirements text 'help'";
+char text_message2[] = "message received, fetching request";
 string admin = "18027346892";
 string off = "off";
 
@@ -134,6 +135,17 @@ void listen() {
 			// send the basic return message back to the sender
 			sim7600.SendingShortMessage(ph_num_char, text_message);
 			strcpy(ph_num_char, "0000000000");
+		}
+		else 
+		{
+			// convert the phone number
+			char ph_num_char[ph_num.size() + 1];
+			strcpy(ph_num_char, ph_num.c_str());
+
+			// send the basic return message back to the sender
+			sim7600.SendingShortMessage(ph_num_char, text_message2);
+			strcpy(ph_num_char, "0000000000");
+
 		}	
 	}
 }
