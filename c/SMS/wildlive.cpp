@@ -33,6 +33,7 @@
 #include <fstream>
 #include <algorithm>
 #include <unistd.h>
+#include <regex>
 using namespace std;
 
 // Pin definition
@@ -41,13 +42,24 @@ int POWERKEY = 6;
 // TODO: add more standard message options
 
 char phone_number[] = "15031234567"; // this is for use with other functions	
-char text_message[] = "Welcome to Wildlive Remote! To receive photo, video or sensor data, text your request. For formatting requirements text 'help'";
-char text_message2[] = "message received, fetching request";
+char welcome[] = "Welcome to Wildlive Remote, where you can receive live photo or video with a single text. Your number is new, please text a valid email address receive media";
+char generic[] = "text 'photo' to receive a photo or 'vid' to receive a video";
+char registered[] = "your phone number and email are saved, now text 'photo' or 'vid' to get your live media";
+char conf[] = "request received, processing request";
 string admin = "18027346892";
 string off = "off";
 
 void setup() {
 	sim7600.PowerOn(POWERKEY);
+}
+
+bool valid_email(const string& email)
+{
+	//regex
+   const regex pattern("(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+
+   // compare regex to email
+   return regex_match(email, pattern);
 }
 
 void listen() {
@@ -97,23 +109,16 @@ void listen() {
 			cout << "Remote Off..." << endl;
 			exit(0);
 		}
-
-		// Write phone number and message out to a file for processing and execution
-		ofstream f;
-		f.open("sms_input.txt");
-		f << ph_num << ',' << text << endl;
-		f.close();
-
-		// TODO: listen for responses from programs for return data to provide
-
+	
 		// check if its a known phone number if not send welcome message
 		ifstream fi;
 		string line;
 		bool known = false;
-		fi.open("stored_numbers.txt");
+		fi.open("/home/pi/WildLive/logs/stored_numbers.txt");
 		while (getline(fi,line))
 		{
-			if (line.compare(ph_num) == 0)
+			string stored_num = line.substr(0, line.find(','));
+			if (stored_num.compare(ph_num) == 0)
 			{
 				known = true;
 				break;
@@ -121,11 +126,28 @@ void listen() {
 		}
 		fi.close();
 		
-		if (known == false)
+		//check if they sent an email
+		bool is_email = valid_email(text);
+
+		// if its just a new number, send the welcome message
+		if (known == false && is_email == false)
 		{
-			// save phone number
-			f.open("stored_numbers.txt", fstream::app);
-			f << ph_num << endl;
+			// convert the phone number
+			char ph_num_char[ph_num.size() + 1];
+			strcpy(ph_num_char, ph_num.c_str());
+
+			// send the basic return message back to the sender
+			sim7600.SendingShortMessage(ph_num_char, welcome);
+			strcpy(ph_num_char, "0000000000");
+		}
+
+		// if its a new number and email store them and send registered message
+		if (known == false && is_email == true)
+		{
+			// save phone number and email
+			ofstream f;
+			f.open("/home/pi/WildLive/logs/stored_numbers.txt", fstream::app);
+			f << ph_num << ',' << text << endl;
 			f.close();
 
 			// convert the phone number
@@ -133,9 +155,11 @@ void listen() {
 			strcpy(ph_num_char, ph_num.c_str());
 
 			// send the basic return message back to the sender
-			sim7600.SendingShortMessage(ph_num_char, text_message);
+			sim7600.SendingShortMessage(ph_num_char, registered);
 			strcpy(ph_num_char, "0000000000");
 		}
+
+		// otherwise send the message off for processing and send a confirmation text
 		else 
 		{
 			// convert the phone number
@@ -143,9 +167,27 @@ void listen() {
 			strcpy(ph_num_char, ph_num.c_str());
 
 			// send the basic return message back to the sender
-			sim7600.SendingShortMessage(ph_num_char, text_message2);
+			sim7600.SendingShortMessage(ph_num_char, conf);
 			strcpy(ph_num_char, "0000000000");
 
+			// find their email
+			string email;
+			fi.open("/home/pi/WildLive/logs/stored_numbers.txt");
+			while (getline(fi,line))
+			{
+				string stored_num = line.substr(0, line.find(','));
+				if (stored_num.compare(ph_num) == 0)
+				{
+					email = line.substr(line.find(','), line.length());
+				}
+			}
+			fi.close();
+
+			// Write phone number and message out to a file for processing and execution
+			ofstream f;
+			f.open("/home/pi/WildLive/logs/sms_input.txt");
+			f << ph_num << ',' << email << ',' << text << endl;
+			f.close();
 		}	
 	}
 }
