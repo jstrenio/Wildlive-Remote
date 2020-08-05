@@ -1,0 +1,20 @@
+## notes, specfications, file locations
+
+Current Phone number for SIM card: 360-593-1550
+
+
+Project home directory:
+/home/pi/WildLive/
+    /photos
+    /logs
+
+
+## Python
+main.py
+    listen() opens "sms_input.txt" from home
+
+capture.py
+
+
+
+
