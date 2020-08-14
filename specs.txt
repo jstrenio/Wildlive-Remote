@@ -14,6 +14,7 @@ main.py
     listen() opens "sms_input.txt" from home
 
 capture.py
+    photo()
 
 
 
