@@ -6,6 +6,7 @@ from time import sleep
 from datetime import datetime
 from logToFile import logToFile
 import os
+from send_email import send_mail
 # this allows for a newline character but still shows file as empty
 MIN_SIZE = 6
 
@@ -17,7 +18,9 @@ def take_pic():
     camera = PiCamera()
     camera.start_preview()
     sleep(3)
-    camera.capture('/home/pi/WildLive/photos/'+stamp+'.jpg')
+    # added path variable to return from this function
+    path = '/home/pi/WildLive/photos/'+stamp+'.jpg'
+    camera.capture(path)
     #add try/except to send error alert 
     camera.stop_preview()
     camera.close()
@@ -25,6 +28,8 @@ def take_pic():
     t = datetime.now()
     logtime = t.strftime("%m%y%H%M%S")
     logToFile(logtime, 'saved image ' + stamp)
+    return path
+
 
 # listen for command
 def listen():
@@ -44,7 +49,8 @@ def listen():
             # check if photo is in the commands list
             if 'photo' in cmd_list:
                 print("taking photo")
-                take_pic()
+                path = take_pic()
+                send_mail(path, line)
 
             # send file out
 
