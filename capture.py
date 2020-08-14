@@ -28,16 +28,17 @@ def take_pic():
     t = datetime.now()
     logtime = t.strftime("%m%y%H%M%S")
     logToFile(logtime, 'saved image ' + stamp)
+    print("photo taken")
     return path
 
 
 # listen for command
 def listen():
-    if os.stat("sms_input.txt").st_size > MIN_SIZE:
+    if os.stat("/home/pi/WildLive/logs/sms_input.txt").st_size > MIN_SIZE:
         print("opening file")
 
         # if it has open it
-        with open("sms_input.txt", 'r+') as filestream:
+        with open("/home/pi/WildLive/logs/sms_input.txt", 'r+') as filestream:
             # read and parse commands
             line = filestream.readline()
             cmd_list = line.split(",")

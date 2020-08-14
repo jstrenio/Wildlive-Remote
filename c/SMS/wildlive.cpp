@@ -42,7 +42,7 @@ int POWERKEY = 6;
 // TODO: add more standard message options
 
 char phone_number[] = "15031234567"; // this is for use with other functions	
-char welcome[] = "Welcome to Wildlive Remote, where you can receive live photo or video with a single text. Your number is new, please text a valid email address receive media";
+char welcome[] = "Welcome to Wildlive Remote, where you can receive live photo or video with a single text. Your number is new, please text a valid email address to receive media";
 char generic[] = "text 'photo' to receive a photo or 'vid' to receive a video";
 char registered[] = "your phone number and email are saved, now text 'photo' or 'vid' to get your live media";
 char conf[] = "request received, processing request";
@@ -186,7 +186,8 @@ void listen() {
 			// Write phone number and message out to a file for processing and execution
 			ofstream f;
 			f.open("/home/pi/WildLive/logs/sms_input.txt");
-			f << ph_num << ',' << email << ',' << text << endl;
+			cout << "writing: " << ph_num << email << ',' << text <<endl;
+			f << ph_num << email << ',' << text << endl;
 			f.close();
 		}	
 	}
