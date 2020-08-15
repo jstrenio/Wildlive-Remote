@@ -15,7 +15,6 @@ subdirectories:
 
 SETUP:
     This software requires any SIM card with 4G service connected to a waveshare SIM7600E 4G hat to any linux based system.
-
     To run this program at startup init_4g_hat.sh must be placed in the default
     users .bashrc file or run at startup using a similar method. This program
     can also simply be run by executing the shell script from the terminal or by
@@ -24,7 +23,6 @@ SETUP:
 
 CITATIONS:
     All of the modem related functions utilize the AT commands from the demo code provided by the manufacturer Waveshare. The AT Commands were pulled from the header files under the /c subdirectory. The C based program portion of this system that actually runs written by the Wildlive team can be found at /c/SMS/wildlive.cpp 
-    
     sources:
     AT commands: https://www.waveshare.com/w/upload/5/54/SIM7500_SIM7600_Series_AT_Command_Manual_V1.08.pdf
 
