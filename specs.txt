@@ -14,8 +14,19 @@ main.py
     listen() opens "sms_input.txt" from home
 
 capture.py
-    photo()
 
+## C
+wildlive.cpp
+    listen() -waits for SMS modem ping
+             -parses message and metadata
+             -sends commands to sms_input.txt
+
+## bash scripts
+init_4g_hat.sh
+    initializes modem, connects to network, begins running wildlive.cpp
+
+wildlive_init.sh
+    only begins running wildlive.cpp
 
 
 

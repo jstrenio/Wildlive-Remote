@@ -25,6 +25,40 @@
 	* THE SOFTWARE.
 */
 
+/*
+MIT License
+
+Copyright (c) 2020 John Strenio
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Filename: wildlive.cpp
+Original Author: John Strenio
+Sources: see README
+Description:
+This program handles all of the modem and SMS based interactions with the
+raspberry pi, it utilizes functions from the waveshare demo files listed in 
+README attached with this software. This file is called from a bashscript
+that is run at startup of the system and writes to a mutually shared and
+accessed .txt file with the python script that performs the requested actions.
+*/
+
 #include "../arduPi.h"
 #include "../sim7x00.h"
 #include <stdio.h>
@@ -38,8 +72,6 @@ using namespace std;
 
 // Pin definition
 int POWERKEY = 6;
-
-// TODO: add more standard message options
 
 char phone_number[] = "15031234567"; // this is for use with other functions	
 char welcome[] = "Welcome to Wildlive Remote, where you can receive live photo or video with a single text. Your number is new, please text a valid email address to receive media";
@@ -197,6 +229,7 @@ int main() {
 	setup();
 	while(true)
 	{
+		// listen for SMS unless kill command sent
 		listen();
 	}
 

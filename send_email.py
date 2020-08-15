@@ -3,14 +3,15 @@
 
 
 import smtplib
-import ssl
 import re
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 
 USERNAME = "wildlife.remote.r@gmail.com"
-PASSWORD = "uV%Ku@]L8j_~'7Cg"
+#USERNAME = "wildlive@att.net"
+PASSWORD = "uV%Ku@]L8j_~'7Cg" 
+#PASSWORD = "opensource2020"
 
 ADDRESS = "wildlife.remote.r@gmail.com"
 
@@ -38,6 +39,7 @@ def send_mail(picture_path, text_string):
 	print("photo attached")
 
 	s = smtplib.SMTP(host='smtp.gmail.com', port=587)
+	#s = smtplib.SMTP(host='smtp.mail.att.net', port=465)
 	s.ehlo()
 	s.starttls()
 
