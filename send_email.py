@@ -1,4 +1,6 @@
-# Hafner 2020
+# return message functionality using
+# Hafner, Devi, Strenio 2020
+
 
 import smtplib
 import ssl
@@ -47,9 +49,8 @@ def send_mail(picture_path, text_string):
 
 
 def get_email(string):
-	"""  decided to use regular expression instead
-	using help from: "https://docs.python.org/3/library/re.html" and
-	"https://stackoverflow.com/questions/17681670/extract-email-sub-strings-from-large-document"""""
+	#regular expression modeled from: "https://docs.python.org/3/library/re.html" and
+	#https://stackoverflow.com/questions/17681670/extract-email-sub-strings-from-large-document
 	#email = re.search(r'[\w\.-]+@[\w\.-]+\.\w+', string)
 	parsed_string = string.split(',')
 	email = parsed_string[1]

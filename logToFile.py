@@ -6,13 +6,10 @@ from datetime import datetime
 
 def logToFile(text, file):
     t = datetime.now()
+    logDay = t.strftime("%m%d%Y")
     logTime = t.strftime("%m%d%Y %H:%M:%S- ")
 
-    log = open("/home/pi/WildLive/logs/"+file, 'a+')
-    log.write(logTime+text+'\n')
+    log = open('/home/pi/WildLive/logs/'+logDay, 'a+')
+    log.write(logTime+text+file)
     log.close()
-    
-    return
-  
-  #testing
-logToFile('This another log!', 'testlog.txt')
+
