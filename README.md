@@ -13,6 +13,8 @@ subdirectories:
 
 /logs
 
+/c/SMS
+
 SETUP:
     This software requires any SIM card with 4G service connected to a waveshare SIM7600E 4G hat to any linux based system.
     To run this program at startup init_4g_hat.sh must be placed in the default
