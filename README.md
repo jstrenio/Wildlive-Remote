@@ -2,7 +2,8 @@
 
 A Portland State University Project for CS 461/561
 Open Source Summer '20
-Professor Bart Bassey
+
+Professor Bart Massey
 
 Team: John Strenio, Aster Devi, Daniel Hafner
 
