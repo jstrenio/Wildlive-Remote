@@ -11,6 +11,8 @@ WildLive remote is an open source project to turn a raspberry pi into a remote p
 
 DEMO VIDEO: https://youtu.be/Jb2pPwleDmY
 
+Manually running the programs with a monitor: https://youtu.be/Si2MfwylMZ4
+
 Current Phone number for SIM card: 360-593-1550
 
 pi project directory: /home/pi/WildLive/
